@@ -27,7 +27,6 @@ if __name__ == "__main__":
     parser.add_argument('--bgr', type=float, default=0.1, help='image channel BGR (probability)')
     parser.add_argument('--mixup', type=float, default=0.4, help='image mixup (probability)')
     parser.add_argument('--copy_paste', type=float, default=0.0, help='segment copy-paste (probability)')
-    parser.add_argument('--copy_paste_mode', type=str, default='mixup', help='copy-paste augmentation mode ("flip", "mixup")')
     parser.add_argument('--auto_augment', type=str, default='randaugment', help='AutoAugment policy (randaugment, autoaugment, augmix)')
     parser.add_argument('--erasing', type=float, default=0.4, help='random erasing during classification training (probability)')
     parser.add_argument('--crop_fraction', type=float, default=0.1, help='image crop fraction for classification training')
@@ -105,7 +104,6 @@ if __name__ == "__main__":
         bgr=args.bgr,
         mixup=args.mixup,
         copy_paste=args.copy_paste,
-        copy_paste_mode=args.copy_paste_mode,
         auto_augment=args.auto_augment,
         erasing=args.erasing,
         crop_fraction=args.crop_fraction,
