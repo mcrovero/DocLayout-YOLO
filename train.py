@@ -13,17 +13,25 @@ if __name__ == "__main__":
     parser.add_argument('--warmup-epochs', default=3.0, required=False, type=float)
     parser.add_argument('--batch-size', default=16, required=False, type=int)
     parser.add_argument('--image-size', default=None, required=True, type=int)
-    parser.add_argument('--mosaic', default=1.0, required=False, type=float)
+    parser.add_argument('--mosaic', default=0.0, required=False, type=float, help='image mosaic (probability)')
     parser.add_argument('--hsv_h', type=float, default=0.015, help='image HSV-Hue augmentation (fraction)')
-    parser.add_argument('--hsv_s', type=float, default=0.7, help='image HSV-Saturation augmentation (fraction)')
-    parser.add_argument('--hsv_v', type=float, default=0.4, help='image HSV-Value augmentation (fraction)')
+    parser.add_argument('--hsv_s', type=float, default=0.2, help='image HSV-Saturation augmentation (fraction)')
+    parser.add_argument('--hsv_v', type=float, default=0.2, help='image HSV-Value augmentation (fraction)')
     parser.add_argument('--degrees', type=float, default=180, help='image rotation (+/- deg)')
     parser.add_argument('--translate', type=float, default=0, help='image translation (+/- fraction)')
     parser.add_argument('--scale', type=float, default=0, help='image scale (+/- gain)')
     parser.add_argument('--shear', type=float, default=0, help='image shear (+/- deg)')
-    parser.add_argument('--perspective', type=float, default=0.3, help='image perspective (+/- fraction), range 0-0.001')
-    parser.add_argument('--flipud', type=float, default=0.5, help='image flip up-down (probability)')
+    parser.add_argument('--perspective', type=float, default=0.1, help='image perspective (+/- fraction), range 0-0.001')
+    parser.add_argument('--flipud', type=float, default=0.2, help='image flip up-down (probability)')
     parser.add_argument('--fliplr', type=float, default=0, help='image flip left-right (probability)')
+    parser.add_argument('--bgr', type=float, default=0.1, help='image channel BGR (probability)')
+    parser.add_argument('--mixup', type=float, default=0.4, help='image mixup (probability)')
+    parser.add_argument('--copy_paste', type=float, default=0.0, help='segment copy-paste (probability)')
+    parser.add_argument('--copy_paste_mode', type=str, default='mixup', help='copy-paste augmentation mode ("flip", "mixup")')
+    parser.add_argument('--auto_augment', type=str, default='randaugment', help='AutoAugment policy (randaugment, autoaugment, augmix)')
+    parser.add_argument('--erasing', type=float, default=0.4, help='random erasing during classification training (probability)')
+    parser.add_argument('--crop_fraction', type=float, default=0.1, help='image crop fraction for classification training')
+    parser.add_argument('--overlap_mask', type=bool, default=False, help='segmentation overlap mask (True/False)')
     parser.add_argument('--pretrain', default=None, required=False, type=str)
     parser.add_argument('--val', default=1, required=False, type=int)
     parser.add_argument('--val-period', default=1, required=False, type=int)
@@ -67,7 +75,12 @@ if __name__ == "__main__":
         plot = True
     else:
         plot = False
-    
+
+    # Print the configuration before starting training
+    print("--- Training Configuration ---")
+    print(args)
+    print("--------------------------")
+
     # Train the model
     name = f"yolov10{args.model}_{args.data}_epoch{args.epoch}_imgsz{args.image_size}_bs{args.batch_size}_pretrain_{pretrain_name}"
     results = model.train(
@@ -89,6 +102,13 @@ if __name__ == "__main__":
         perspective=args.perspective,
         flipud=args.flipud,
         fliplr=args.fliplr,
+        bgr=args.bgr,
+        mixup=args.mixup,
+        copy_paste=args.copy_paste,
+        copy_paste_mode=args.copy_paste_mode,
+        auto_augment=args.auto_augment,
+        erasing=args.erasing,
+        crop_fraction=args.crop_fraction,
         batch=args.batch_size,
         device=args.device,
         workers=args.workers,
@@ -96,6 +116,7 @@ if __name__ == "__main__":
         exist_ok=False,
         val=val,
         val_period=args.val_period,
+        overlap_mask=args.overlap_mask,
         resume=args.resume,
         save_period=args.save_period,
         patience=args.patience,
