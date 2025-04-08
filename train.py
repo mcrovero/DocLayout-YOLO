@@ -14,6 +14,16 @@ if __name__ == "__main__":
     parser.add_argument('--batch-size', default=16, required=False, type=int)
     parser.add_argument('--image-size', default=None, required=True, type=int)
     parser.add_argument('--mosaic', default=1.0, required=False, type=float)
+    parser.add_argument('--hsv_h', type=float, default=0.015, help='image HSV-Hue augmentation (fraction)')
+    parser.add_argument('--hsv_s', type=float, default=0.7, help='image HSV-Saturation augmentation (fraction)')
+    parser.add_argument('--hsv_v', type=float, default=0.4, help='image HSV-Value augmentation (fraction)')
+    parser.add_argument('--degrees', type=float, default=180, help='image rotation (+/- deg)')
+    parser.add_argument('--translate', type=float, default=0, help='image translation (+/- fraction)')
+    parser.add_argument('--scale', type=float, default=0, help='image scale (+/- gain)')
+    parser.add_argument('--shear', type=float, default=0, help='image shear (+/- deg)')
+    parser.add_argument('--perspective', type=float, default=0.3, help='image perspective (+/- fraction), range 0-0.001')
+    parser.add_argument('--flipud', type=float, default=0.5, help='image flip up-down (probability)')
+    parser.add_argument('--fliplr', type=float, default=0, help='image flip left-right (probability)')
     parser.add_argument('--pretrain', default=None, required=False, type=str)
     parser.add_argument('--val', default=1, required=False, type=int)
     parser.add_argument('--val-period', default=1, required=False, type=int)
@@ -69,6 +79,16 @@ if __name__ == "__main__":
         momentum=args.momentum,
         imgsz=args.image_size, 
         mosaic=args.mosaic,
+        hsv_h=args.hsv_h,
+        hsv_s=args.hsv_s,
+        hsv_v=args.hsv_v,
+        degrees=args.degrees,
+        translate=args.translate,
+        scale=args.scale,
+        shear=args.shear,
+        perspective=args.perspective,
+        flipud=args.flipud,
+        fliplr=args.fliplr,
         batch=args.batch_size,
         device=args.device,
         workers=args.workers,
